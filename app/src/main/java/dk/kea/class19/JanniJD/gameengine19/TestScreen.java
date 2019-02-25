@@ -23,8 +23,8 @@ public class TestScreen extends Screen
             x = gameEngine.getTouchX(0);
             y = gameEngine.getTouchY(0);
         }
-        gameEngine.clearFrameBuffer(Color.BLUE);
-        gameEngine.drawBitmap(bitmap, x, y);
+        gameEngine.clearFrameBuffer(Color.GREEN);
+        gameEngine.drawBitmap(bitmap, 0, 0, 64, 64, 64, 64);
     }
 
     @Override
