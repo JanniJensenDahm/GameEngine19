@@ -8,4 +8,10 @@ public class TestGame extends GameEngine
     {
         return new TestScreen(this);
     }
+
+    @Override
+    public boolean isTouchDown(int pointers)
+    {
+        return false;
+    }
 }

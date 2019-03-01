@@ -15,6 +15,8 @@ public class TestScreen extends Screen
         bitmap = gameEngine.loadBitmanp("bob.png");
     }
 
+    int cut = 0;
+
     @Override
     public void update(float deltaTime)
     {
@@ -24,7 +26,15 @@ public class TestScreen extends Screen
             y = gameEngine.getTouchY(0);
         }
         gameEngine.clearFrameBuffer(Color.GREEN);
-        gameEngine.drawBitmap(bitmap, 0, 0, 64, 64, 64, 64);
+        gameEngine.drawBitmap(bitmap, x, y);
+        //Where on the screen and how much of the picture to show
+        gameEngine.drawBitmap(bitmap, 200, 200, 64, 64, 64, 64);
+        cut++;
+
+        if(cut == 128)
+        {
+            cut = 0;
+        }
     }
 
     @Override
