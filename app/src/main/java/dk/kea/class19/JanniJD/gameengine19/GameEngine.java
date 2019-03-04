@@ -1,9 +1,14 @@
 package dk.kea.class19.JanniJD.gameengine19;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,7 +22,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GameEngine extends AppCompatActivity implements Runnable, TouchHandler
+public abstract class GameEngine extends AppCompatActivity implements Runnable, TouchHandler, SensorEventListener
 {
     private Thread mainLoopThread;
     private State state = State.Paused;
@@ -31,6 +36,7 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
     private TouchEventPool touchEventPool = new TouchEventPool();
     private List<TouchEvent> touchEventBuffer = new ArrayList<>();
     private List<TouchEvent> touchEventCopied = new ArrayList<>();
+    private float[] accelerometer = new float[3]; //To hold the g-forces in three dimensions x, y and z
 
     public abstract Screen createStartScreen();
 
@@ -62,6 +68,12 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
             setOffscreenSurface(320, 480);
         }
         touchHandler = new MultiTouchHandler(surfaceView, touchEventBuffer, touchEventPool);
+        SensorManager manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if (manager.getSensorList(Sensor.TYPE_ACCELEROMETER).size()!= 0)
+        {
+            Sensor accelerometer = manager.getSensorList(Sensor.TYPE_ACCELEROMETER).get(0);
+            manager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
+        }
     }
 
     public void setOffscreenSurface(int width, int height)
@@ -168,6 +180,21 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
         return scaledY;
     }
 
+    public float[] getAccelerometer()
+    {
+        return accelerometer;
+    }
+
+    public void onAccuracyChanged(Sensor sensor, int accuracy)
+    {
+
+    }
+
+    public void onSensorChanged(SensorEvent event)
+    {
+        System.arraycopy(event.values, 0, accelerometer, 0, 3);
+    }
+
 
     // Main method in thread
     public void run()
@@ -244,6 +271,10 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
             {
                 stateChanges.add(State.Paused);
             }
+        }
+        if (isFinishing())
+        {
+            ((SensorManager)getSystemService(Context.SENSOR_SERVICE)).unregisterListener(this);
         }
     }
     @Override
