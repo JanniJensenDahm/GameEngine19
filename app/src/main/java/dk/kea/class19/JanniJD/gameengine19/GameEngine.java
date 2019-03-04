@@ -27,7 +27,10 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
     private Canvas canvas;
     private Screen screen;
     private Bitmap offscreenSurface;
-
+    private MultiTouchHandler touchHandler;
+    private TouchEventPool touchEventPool = new TouchEventPool();
+    private List<TouchEvent> touchEventBuffer = new ArrayList<>();
+    private List<TouchEvent> touchEventCopied = new ArrayList<>();
 
     public abstract Screen createStartScreen();
 
@@ -58,6 +61,7 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
         {
             setOffscreenSurface(320, 480);
         }
+        touchHandler = new MultiTouchHandler(surfaceView, touchEventBuffer, touchEventPool);
     }
 
     public void setOffscreenSurface(int width, int height)
@@ -147,17 +151,21 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
 
     public boolean isTouchDown(int pointer)
     {
-        return false;
+        return touchHandler.isTouchDown(pointer);
     }
 
     public int getTouchX(int pointer)
     {
-        return 0;
+        int scaledX = 0;
+        scaledX = (int)((float)touchHandler.getTouchX(pointer)*(float)offscreenSurface.getWidth()/(float) surfaceView.getWidth());
+        return scaledX;
     }
 
     public int getTouchY(int pointer)
     {
-        return 0;
+        int scaledY = 0;
+        scaledY = (int)((float)touchHandler.getTouchY(pointer)*(float)offscreenSurface.getHeight()/(float) surfaceView.getHeight());
+        return scaledY;
     }
 
 

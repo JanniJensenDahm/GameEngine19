@@ -20,15 +20,17 @@ public class TestScreen extends Screen
     @Override
     public void update(float deltaTime)
     {
+        gameEngine.clearFrameBuffer(Color.GREEN);
+
         if (gameEngine.isTouchDown(0));
         {
             x = gameEngine.getTouchX(0);
             y = gameEngine.getTouchY(0);
         }
-        gameEngine.clearFrameBuffer(Color.GREEN);
+
         gameEngine.drawBitmap(bitmap, x, y);
         //Where on the screen and how much of the picture to show
-        gameEngine.drawBitmap(bitmap, 200, 200, 64, 64, 64, 64);
+        //gameEngine.drawBitmap(bitmap, 200, 200, 64, 64, 64, 64);
         cut++;
 
         if(cut == 128)
