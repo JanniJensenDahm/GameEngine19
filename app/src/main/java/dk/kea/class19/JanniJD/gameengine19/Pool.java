@@ -8,6 +8,7 @@ abstract class Pool <T>
     private List<T> items = new ArrayList<>();
 
     protected abstract T newItem();
+
     public T obtains()
     {
         int size = items.size();

@@ -1,6 +1,6 @@
 package dk.kea.class19.JanniJD.gameengine19;
 
-class TouchEvent
+public class TouchEvent
 {
     public enum TouchEventType
     {

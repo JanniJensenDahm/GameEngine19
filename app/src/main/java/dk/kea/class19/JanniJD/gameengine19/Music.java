@@ -80,13 +80,14 @@ public class Music implements MediaPlayer.OnCompletionListener
         }
     }
 
-
-
-
+    public void setLooping(boolean loop)
+    {
+        mediaPlayer.setLooping(loop);
+    }
 
     public void setVolume(float volume)
     {
-
+        mediaPlayer.setVolume(volume, volume);
     }
 
     public void stop()

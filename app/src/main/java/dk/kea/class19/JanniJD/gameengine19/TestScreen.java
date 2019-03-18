@@ -2,12 +2,13 @@ package dk.kea.class19.JanniJD.gameengine19;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.Log;
 
 public class TestScreen extends Screen
 {
-    int x = 0;
-    int y = 240;
-    Bitmap bitmap;
+    float x = 0;
+    float y = 240;
+    private Bitmap bitmap;
     Sound sound;
     Music backgroundMusic;
     boolean isPlaying = false;
@@ -26,11 +27,12 @@ public class TestScreen extends Screen
     @Override
     public void update(float deltaTime)
     {
+        //Log.d("TestScreen", "FPS: " + gameEngine.getFramesPerSecond());
         gameEngine.clearFrameBuffer(Color.GREEN);
 
-        x = x + 10;
+        x = x + 50 * deltaTime;
         if (x > 320 + bitmap.getWidth()) x = 0 - bitmap.getWidth();
-        /*
+
         if (gameEngine.isTouchDown(0));
         {
             x = gameEngine.getTouchX(0);
@@ -48,6 +50,8 @@ public class TestScreen extends Screen
                 isPlaying = true;
             }
         }
+
+        /*
         float x = gameEngine.getAccelerometer()[0];
         float y = -1 * gameEngine.getAccelerometer()[1];
         x = gameEngine.getFramebufferWidth()/2 + ((x/10) * gameEngine.getFramebufferWidth()/2);

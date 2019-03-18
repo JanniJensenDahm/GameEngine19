@@ -41,6 +41,9 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
     private List<TouchEvent> touchEventCopied = new ArrayList<>();
     private float[] accelerometer = new float[3]; //To hold the g-forces in three dimensions x, y and z
     private SoundPool soundPool = new SoundPool.Builder().setMaxStreams(20).build();
+    private int framesPerSecond = 0;
+    long currentTime = 0;
+    long lastTime = 0;
 
 
     public abstract Screen createStartScreen();
@@ -85,10 +88,7 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
 
     public void setOffscreenSurface(int width, int height)
     {
-        if (offscreenSurface != null)
-        {
-            offscreenSurface.recycle();
-        }
+        if (offscreenSurface != null) offscreenSurface.recycle();
         offscreenSurface = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
         canvas = new Canvas(offscreenSurface);
     }
@@ -173,7 +173,7 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
         try
         {
             AssetFileDescriptor assetFileDescriptor = getAssets().openFd(fileName);
-            if (assetFileDescriptor == null) throw new RuntimeException("AssetFD null");
+            //if (assetFileDescriptor == null) throw new RuntimeException("AssetFD null");
             if (soundPool == null) throw new RuntimeException("soundPool null");
             int soundId = soundPool.load(assetFileDescriptor, 0);
 
@@ -233,10 +233,42 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
         System.arraycopy(event.values, 0, accelerometer, 0, 3);
     }
 
+    private void fillEvents()
+    {
+        synchronized (touchEventBuffer)
+        {
+            int stop = touchEventBuffer.size();
+            for (int i = 0; i < stop; i++)
+            {
+                touchEventCopied.add(touchEventBuffer.get(i));
+            }
+            touchEventBuffer.clear();
+        }
+    }
+
+    private void freeEvents()
+    {
+        synchronized (touchEventCopied)
+        {
+            int stop = touchEventCopied.size();
+            for (int i = 0; i < stop; i++)
+            {
+                touchEventPool.free(touchEventCopied.get(i));
+            }
+            touchEventCopied.clear();
+        }
+    }
+
+    public int getFramesPerSecond()
+    {
+        return framesPerSecond;
+    }
 
     // Main method in thread
     public void run()
     {
+        //int frames = 0;
+        //long startTime = System.nanoTime();
         while (true)
         {
             synchronized (stateChanges)
@@ -264,24 +296,26 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
 
                 if (state == State.Running)
                 {
-                    Log.d("GameEngine", "State is running " + surfaceHolder.getSurface().isValid());
+                    //Log.d("GameEngine", "State is running " + surfaceHolder.getSurface().isValid());
                     if (!surfaceHolder.getSurface().isValid())
                     {
                         continue;
                     }
                     //Log.d("GameEngine", "Trying to get canvas");
                     Canvas canvas = surfaceHolder.lockCanvas();
+
                     // All the drawing code should happen here
                     // canvas.drawColor(Color.BLUE);
-                    if (screen != null)
-                    {
-                        screen.update(0);
-                    }
+                    fillEvents();
+                    currentTime = System.nanoTime();
+                    if (screen != null) screen.update((currentTime - lastTime)/1000000000.0f);
+                    lastTime = currentTime;
+                    freeEvents();
 
                     src.left = 0;
                     src.top = 0;
-                    src.right = offscreenSurface.getWidth() - 1;
-                    src.bottom = offscreenSurface.getHeight() - 1;
+                    src.right = offscreenSurface.getWidth();
+                    src.bottom = offscreenSurface.getHeight();
 
                     dst.left = 0;
                     dst.top = 0;
@@ -291,6 +325,16 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
                     canvas.drawBitmap(offscreenSurface, src, dst, null);
                     surfaceHolder.unlockCanvasAndPost(canvas);
                 }
+
+                /*
+                frames++;
+                if (System.nanoTime() - startTime > 1000000000)
+                {
+                    framesPerSecond = frames;
+                    frames = 0;
+                    startTime = System.nanoTime();
+                }
+                */
             } // End of synchronized
         } // End of while-loop
     }
@@ -303,11 +347,11 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
         {
             if (isFinishing())
             {
-                stateChanges.add(State.Disposed);
+                stateChanges.add(stateChanges.size(), State.Disposed);
             }
             else
             {
-                stateChanges.add(State.Paused);
+                stateChanges.add(stateChanges.size(), State.Paused);
             }
         }
         if (isFinishing())
