@@ -7,12 +7,15 @@ import java.util.List;
 
 public class MultiTouchHandler implements TouchHandler, View.OnTouchListener
 {
-    private boolean[] isTouched = new boolean[20]; // Store first 20 touches
+    // Store first 20 touches
+    private boolean[] isTouched = new boolean[20];
     private int[] touchX = new int[20];
     private int[] touchY = new int[20];
 
-    private List<TouchEvent> touchEventBuffer; // Buffer with touch events
-    private TouchEventPool touchEventPool;      //Pool with re-usable TouchEvent
+    // Buffer with touch events
+    private List<TouchEvent> touchEventBuffer;
+    //Pool with re-usable TouchEvent
+    private TouchEventPool touchEventPool;
 
     public MultiTouchHandler(View v, List<TouchEvent> touchEventBuffer, TouchEventPool touchEventPool)
     {
@@ -34,7 +37,7 @@ public class MultiTouchHandler implements TouchHandler, View.OnTouchListener
         {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
-                touchEvent = (TouchEvent) touchEventPool.obtains();
+                touchEvent = touchEventPool.obtains();
                 touchEvent.type = TouchEvent.TouchEventType.Down;
                 touchEvent.pointer = pointerId;
                 touchEvent.x = (int) event.getX();
@@ -50,7 +53,7 @@ public class MultiTouchHandler implements TouchHandler, View.OnTouchListener
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
             case MotionEvent.ACTION_CANCEL:
-                touchEvent = (TouchEvent) touchEventPool.obtains();
+                touchEvent = touchEventPool.obtains();
                 touchEvent.type = TouchEvent.TouchEventType.Up;
                 touchEvent.pointer = pointerId;
                 touchEvent.x = (int) event.getX();
@@ -69,7 +72,7 @@ public class MultiTouchHandler implements TouchHandler, View.OnTouchListener
                 {
                     for (int i = 0; i < pointerCount; i++)
                     {
-                        touchEvent = (TouchEvent) touchEventPool.obtains();
+                        touchEvent = touchEventPool.obtains();
                         touchEvent.type = TouchEvent.TouchEventType.Dragged;
                         touchEvent.pointer = pointerId;
                         touchEvent.x = (int) event.getX();
@@ -77,14 +80,13 @@ public class MultiTouchHandler implements TouchHandler, View.OnTouchListener
                         touchEvent.y = (int) event.getY();
                         touchY[pointerId] = touchEvent.y;
                         isTouched[pointerId] = true;
-                        touchEventBuffer.add(touchEvent);
+                        //touchEventBuffer.add(touchEvent);
                     }
                 }
                 break;
-
         }
-
-        return true;            //Telling the android system I did handle this onTouch event
+        //Telling the android system I did handle this onTouch event
+        return true;
     }
 
     @Override

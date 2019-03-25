@@ -8,7 +8,7 @@ public class TestScreen extends Screen
 {
     float x = 0;
     float y = 240;
-    private Bitmap bitmap;
+    Bitmap bitmap;
     Sound sound;
     Music backgroundMusic;
     boolean isPlaying = false;
@@ -22,7 +22,6 @@ public class TestScreen extends Screen
         isPlaying = true;
     }
 
-    int cut = 0;
 
     @Override
     public void update(float deltaTime)
@@ -61,12 +60,7 @@ public class TestScreen extends Screen
         gameEngine.drawBitmap(bitmap, (int)x-64, (int)y-64);
         //Where on the screen and how much of the picture to show
         //gameEngine.drawBitmap(bitmap, 200, 200, 64, 64, 64, 64);
-        cut++;
-
-        if(cut == 128)
-        {
-            cut = 0;
-        }
+        gameEngine.drawBitmap(bitmap, 200, 300, 0, 0, 64, 64);
     }
 
     @Override

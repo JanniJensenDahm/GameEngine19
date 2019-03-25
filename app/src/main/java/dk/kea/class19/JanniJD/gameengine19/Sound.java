@@ -13,7 +13,7 @@ public class Sound
         this.soundId = soundId;
     }
 
-    public  void play(float volume)
+    public void play(float volume)
     {
         soundPool.play(soundId, volume, volume, 0, 0, 1);
     }

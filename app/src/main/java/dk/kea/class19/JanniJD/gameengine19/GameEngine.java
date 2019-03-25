@@ -5,6 +5,7 @@ import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -32,8 +33,8 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
     private List<State> stateChanges = new ArrayList<>();
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
-    private Canvas canvas;
-    private Screen screen;
+    private Canvas canvas = null;
+    private Screen screen = null;
     private Bitmap offscreenSurface;
     private MultiTouchHandler touchHandler;
     private TouchEventPool touchEventPool = new TouchEventPool();
@@ -45,11 +46,11 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
     long currentTime = 0;
     long lastTime = 0;
 
-
     public abstract Screen createStartScreen();
 
     public void setScreen(Screen screen)
     {
+        if (this.screen != null) this.screen.dispose();
         this.screen = screen;
     }
 
@@ -141,7 +142,8 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
 
     public void clearFrameBuffer(int color)
     {
-        canvas.drawColor(color);
+        //canvas.drawColor(color);
+        canvas.drawColor(Color.BLUE);
     }
 
     public void  drawBitmap(Bitmap bitmap, int x, int y)
@@ -173,7 +175,7 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
         try
         {
             AssetFileDescriptor assetFileDescriptor = getAssets().openFd(fileName);
-            //if (assetFileDescriptor == null) throw new RuntimeException("AssetFD null");
+            if (assetFileDescriptor == null) throw new RuntimeException("AssetFD null");
             if (soundPool == null) throw new RuntimeException("soundPool null");
             int soundId = soundPool.load(assetFileDescriptor, 0);
 
@@ -255,7 +257,7 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
             {
                 touchEventPool.free(touchEventCopied.get(i));
             }
-            touchEventCopied.clear();
+            //touchEventCopied.clear();
         }
     }
 
@@ -267,8 +269,8 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
     // Main method in thread
     public void run()
     {
-        //int frames = 0;
-        //long startTime = System.nanoTime();
+        int frames = 0;
+        long startTime = System.nanoTime();
         while (true)
         {
             synchronized (stateChanges)
@@ -278,30 +280,28 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
                     state = stateChanges.get(i);
                     if (state == State.Disposed)
                     {
-                        Log.d("GameEngine", "State changed to Disposed");
+                        //Log.d("GameEngine", "State changed to Disposed");
                         return; //Killing the thread
                     }
                     if (state == State.Paused)
                     {
-                        Log.d("GameEngine", "State changed to Paused");
+                        //Log.d("GameEngine", "State changed to Paused");
                         return;
                     }
                     if (state == State.Resumed)
                     {
-                        Log.d("GameEngine", "State changed to Resumed");
+                        //Log.d("GameEngine", "State changed to Resumed");
                         state = State.Running;
                     }
                 } // End of for-loop
-                //stateChanges.clear();
+                stateChanges.clear();
 
                 if (state == State.Running)
                 {
-                    //Log.d("GameEngine", "State is running " + surfaceHolder.getSurface().isValid());
                     if (!surfaceHolder.getSurface().isValid())
                     {
                         continue;
                     }
-                    //Log.d("GameEngine", "Trying to get canvas");
                     Canvas canvas = surfaceHolder.lockCanvas();
 
                     // All the drawing code should happen here
@@ -326,7 +326,7 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
                     surfaceHolder.unlockCanvasAndPost(canvas);
                 }
 
-                /*
+
                 frames++;
                 if (System.nanoTime() - startTime > 1000000000)
                 {
@@ -334,7 +334,6 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
                     frames = 0;
                     startTime = System.nanoTime();
                 }
-                */
             } // End of synchronized
         } // End of while-loop
     }

@@ -10,7 +10,7 @@ public class TouchEvent
     }
 
     public TouchEventType type;  //The type of event
-    public int x;           //The x-coordinate of the event
-    public int y;           //The y-coordinate of the event
-    public int pointer;     //The pointer id (from the android system)
+    public int x;                //The x-coordinate of the event
+    public int y;                //The y-coordinate of the event
+    public int pointer;          //The pointer id (from the android system)
 }
