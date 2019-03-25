@@ -1,7 +1,7 @@
 package dk.kea.class19.JanniJD.gameengine19;
 
-// What a basic screen should be able to do
-// basic behavior from a screen.
+/* What a basic screen should be able to do
+ basic behavior from a screen.*/
 public abstract class Screen
 {
     protected final GameEngine gameEngine;

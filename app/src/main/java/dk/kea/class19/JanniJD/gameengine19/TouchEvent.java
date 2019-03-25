@@ -7,6 +7,7 @@ public class TouchEvent
         Down,
         Up,
         Dragged
+
     }
 
     public TouchEventType type;  //The type of event

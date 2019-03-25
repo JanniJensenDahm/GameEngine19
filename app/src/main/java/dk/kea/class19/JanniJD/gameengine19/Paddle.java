@@ -2,6 +2,7 @@ package dk.kea.class19.JanniJD.gameengine19;
 
 public class Paddle
 {
+
     public static float WIDTH = 56;
     public static float HEIGHT = 11;
     public float x = 160 - WIDTH/2;

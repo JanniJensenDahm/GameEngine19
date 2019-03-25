@@ -22,7 +22,6 @@ public class TestScreen extends Screen
         isPlaying = true;
     }
 
-
     @Override
     public void update(float deltaTime)
     {

@@ -2,7 +2,6 @@ package dk.kea.class19.JanniJD.gameengine19;
 
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
-
 import java.io.IOException;
 
 public class Music implements MediaPlayer.OnCompletionListener

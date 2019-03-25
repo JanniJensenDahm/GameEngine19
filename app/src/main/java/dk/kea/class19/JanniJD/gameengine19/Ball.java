@@ -9,5 +9,4 @@ public class Ball
     public float y = 240;
     public float velocityX = 100;
     public float velocityY = -100;
-
 }

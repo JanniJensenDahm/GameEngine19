@@ -59,7 +59,8 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
     {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getSupportActionBar().hide(); //Hide title bar
+        //Hide title bar
+        getSupportActionBar().hide();
         this.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 

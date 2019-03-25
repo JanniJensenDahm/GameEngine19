@@ -88,7 +88,6 @@ public class MultiTouchHandler implements TouchHandler, View.OnTouchListener
         //Telling the android system I did handle this onTouch event
         return true;
     }
-
     @Override
     public boolean isTouchDown(int pointer)
     {

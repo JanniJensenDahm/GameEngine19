@@ -8,6 +8,7 @@ public class Block
     public float y;
     public int type;
 
+
     public Block(float x, float y, int type)
     {
         this.x = x;

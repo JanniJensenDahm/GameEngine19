@@ -6,7 +6,6 @@ import java.util.List;
 abstract class Pool <T>
 {
     private List<T> items = new ArrayList<>();
-
     protected abstract T newItem();
 
     public T obtains()

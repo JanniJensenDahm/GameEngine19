@@ -35,6 +35,7 @@ public class GameScreen extends Screen
         {
             state = State.Running;
         }
+        //Restart the game
         if (state == State.GameOver && gameEngine.isTouchDown(0))
         {
             gameEngine.setScreen(new MainMenuScreen(gameEngine));

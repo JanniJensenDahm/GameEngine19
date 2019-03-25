@@ -6,4 +6,5 @@ public enum State
     Paused,
     Resumed,
     Disposed
+
 }

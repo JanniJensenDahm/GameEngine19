@@ -24,6 +24,7 @@ public class WorldRenderer
     {
         gameEngine.drawBitmap(ballImage, (int)world.ball.x, (int)world.ball.y);
         gameEngine.drawBitmap(paddleImage, (int)world.paddle.x, (int)world.paddle.y);
+
         for (int i = 0; i < world.blocks.size(); i++)
         {
             block = world.blocks.get(i);
