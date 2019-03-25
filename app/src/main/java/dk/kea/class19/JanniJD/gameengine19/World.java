@@ -71,12 +71,36 @@ public class World
         }
     }
 
+    private void collideBallBlocks()
+    {
+        Block block = null;
+        for (int i = 0; i < blocks.size(); i++)
+        {
+            block = blocks.get(i);
+            if (collideRects(ball.x, ball.y, Ball.WIDTH, Ball.HEIGHT,
+                    block.x, block.y, Block.WIDTH, Block.HEIGHT))
+            {
+                blocks.remove(i);
+            }
+        }
+    }
+
+    private boolean collideRects(float x, float y, float width, float height,
+                                 float x2, float y2, float width2, float height2)
+    {
+        if (x < x2 && x + width > x2 && y < y2 && y + height > y2)
+        {
+            return true;
+        }
+        return false;
+    }
+
     private void generateBlocks()
     {
         blocks.clear();
-        for (int y = 60, type = 0; y < 60 + 8 * (Block.HEIGHT + 4); y = y + (int)Block.HEIGHT, type++)
+        for (int y = 60, type = 0; y < 60 + 8 * (Block.HEIGHT + 4); y = y + (int)Block.HEIGHT + 4, type++)
         {
-            for (int x = 20; x < 320 - Block.WIDTH; x = x + (int)Block.WIDTH + 4)
+            for (int x = 30; x < 320 - Block.WIDTH; x = x + (int)Block.WIDTH + 4)
             {
                 blocks.add(new Block(x, y, type));
             }
