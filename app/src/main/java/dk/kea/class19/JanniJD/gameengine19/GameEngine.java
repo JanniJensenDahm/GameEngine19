@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -45,6 +47,8 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
     private int framesPerSecond = 0;
     long currentTime = 0;
     long lastTime = 0;
+    Paint paint = new Paint();
+    public Music music;
 
     public abstract Screen createStartScreen();
 
@@ -143,8 +147,8 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
 
     public void clearFrameBuffer(int color)
     {
-        //canvas.drawColor(color);
-        canvas.drawColor(Color.BLUE);
+        canvas.drawColor(color);
+        //canvas.drawColor(Color.BLUE);
     }
 
     public void  drawBitmap(Bitmap bitmap, int x, int y)
@@ -169,6 +173,24 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
         dst.bottom = y + srcHeight;
 
         canvas.drawBitmap(bitmap, src, dst, null);
+    }
+
+    public Typeface loadFont(String fileName)
+    {
+        Typeface font = Typeface.createFromAsset(getAssets(), fileName);
+        if (font == null)
+        {
+            throw new RuntimeException("Could no load font: " + fileName);
+        }
+        return font;
+    }
+
+    public void drawText(Typeface font, String text, int x, int y, int color, int size)
+    {
+        paint.setTypeface(font);
+        paint.setTextSize(size);
+        paint.setColor(color);
+        canvas.drawText(text, x, y, paint);
     }
 
     public Sound loadSound(String fileName)
@@ -205,6 +227,11 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
     public boolean isTouchDown(int pointer)
     {
         return touchHandler.isTouchDown(pointer);
+    }
+
+    public List<TouchEvent> getTouchEvents()
+    {
+        return touchEventCopied;
     }
 
     public int getTouchX(int pointer)
@@ -270,8 +297,8 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
     // Main method in thread
     public void run()
     {
-        int frames = 0;
-        long startTime = System.nanoTime();
+        //int frames = 0;
+        //long startTime = System.nanoTime();
         while (true)
         {
             synchronized (stateChanges)
@@ -327,14 +354,14 @@ public abstract class GameEngine extends AppCompatActivity implements Runnable, 
                     surfaceHolder.unlockCanvasAndPost(canvas);
                 }
 
-
+                /*
                 frames++;
                 if (System.nanoTime() - startTime > 1000000000)
                 {
                     framesPerSecond = frames;
                     frames = 0;
                     startTime = System.nanoTime();
-                }
+                }*/
             } // End of synchronized
         } // End of while-loop
     }
