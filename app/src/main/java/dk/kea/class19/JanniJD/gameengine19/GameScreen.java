@@ -23,6 +23,8 @@ public class GameScreen extends Screen
     World world;
     WorldRenderer renderer;
     String showText;
+    Sound bounceSound;
+    Sound blockSound;
 
     public GameScreen(GameEngine gameEngine)
     {
@@ -31,7 +33,29 @@ public class GameScreen extends Screen
         resume = gameEngine.loadBitmanp("resume.png");
         gameOver = gameEngine.loadBitmanp("gameover.png");
         font = gameEngine.loadFont("font.ttf");
-        world = new World();
+        bounceSound = gameEngine.loadSound("bounce.wav");
+        blockSound = gameEngine.loadSound("blocksplosion.wav");
+
+        world = new World(new CollisionListener()
+        {
+            @Override
+            public void collisionWall()
+            {
+                bounceSound.play(1);
+            }
+
+            @Override
+            public void collisionPaddle()
+            {
+                bounceSound.play(1);
+            }
+
+            @Override
+            public void collisionBlock()
+            {
+                blockSound.play(1);
+            }
+        });
         renderer = new WorldRenderer(gameEngine, world);
     }
 

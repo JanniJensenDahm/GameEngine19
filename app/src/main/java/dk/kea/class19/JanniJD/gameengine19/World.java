@@ -13,6 +13,7 @@ public class World
     Ball ball = new Ball();
     Paddle paddle = new Paddle();
     List<Block> blocks = new ArrayList<>();
+    CollisionListener collisionListener;
 
     int lives = 3;
     boolean lostLife = false;
@@ -21,8 +22,9 @@ public class World
     int hits = 0;
     int points = 0;
 
-    public World()
+    public World(CollisionListener collisionListener)
     {
+        this.collisionListener = collisionListener;
         generateBlocks();
     }
 
@@ -34,16 +36,19 @@ public class World
         {
             ball.velocityX = -ball.velocityX;
             ball.x = MIN_X;
+            collisionListener.collisionWall();
         }
         if (ball.x > MAX_X - Ball.WIDTH)
         {
             ball.velocityX = -ball.velocityX;
             ball.x = MAX_X - Ball.WIDTH;
+            collisionListener.collisionWall();
         }
         if (ball.y < MIN_Y)
         {
             ball.velocityY = -ball.velocityY;
             ball.y = MIN_Y;
+            collisionListener.collisionWall();
         }
         /*
         if (ball.y > MAX_Y - Ball.HEIGHT)
@@ -85,7 +90,8 @@ public class World
             level++;
             ball.x = 160;
             ball.y = 320 - 40;
-            ball.velocityY = -Ball.initialSpeed;
+            ball.velocityY = -Ball.initialSpeed * 1.3f;
+            ball.velocityX = Ball.initialSpeed * 1.1f;
         }
 
     } //End of update() method
@@ -93,11 +99,12 @@ public class World
     private void collideBallPaddle(float deltaTime)
     {
         //if (ball.y > paddle.y + Paddle.HEIGHT) return;
-        if ((ball.x + Ball.WIDTH>= paddle.x) && (ball.x < paddle.x + Paddle.WIDTH) && (ball.y + Ball.HEIGHT > paddle.y))
+        if ((ball.x + Ball.WIDTH >= paddle.x) && (ball.x < paddle.x + Paddle.WIDTH) && (ball.y + Ball.HEIGHT > paddle.y))
         {
             ball.y = ball.y - ball.velocityY * deltaTime * 1.01f;
             ball.velocityY = -ball.velocityY;
             hits++;
+            collisionListener.collisionPaddle();
             if (hits == 5 )
             {
                 hits = 0;
@@ -128,6 +135,7 @@ public class World
                 ball.x = ball.x - oldVelocityX * deltaTime * 1.01f;
                 ball.y = ball.y - oldVelocityY * deltaTime * 1.01f;
                 points = points + 10 - block.type;
+                collisionListener.collisionBlock();
                 //No need to check collision with other blocks when it hit this block
                 break;
             }
@@ -205,7 +213,7 @@ public class World
         {
             for (int x = 30; x < 320 - Block.WIDTH; x = x + (int)Block.WIDTH + 4)
             {
-                blocks.add(new Block(x, y, type));
+                blocks.add(new Block(x, y + level * 40, type));
             }
         }
     }
