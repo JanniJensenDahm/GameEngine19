@@ -1,4 +1,4 @@
-package dk.kea.class19.JanniJD.gameengine19;
+package dk.kea.class19.JanniJD.gameengine19.Breakout;
 
 import java.util.ArrayList;
 import java.util.List;

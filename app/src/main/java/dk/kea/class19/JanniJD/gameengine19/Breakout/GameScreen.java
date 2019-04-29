@@ -1,10 +1,15 @@
-package dk.kea.class19.JanniJD.gameengine19;
+package dk.kea.class19.JanniJD.gameengine19.Breakout;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 
 import java.util.List;
+
+import dk.kea.class19.JanniJD.gameengine19.GameEngine;
+import dk.kea.class19.JanniJD.gameengine19.Screen;
+import dk.kea.class19.JanniJD.gameengine19.Sound;
+import dk.kea.class19.JanniJD.gameengine19.TouchEvent;
 
 public class GameScreen extends Screen
 {
@@ -29,12 +34,12 @@ public class GameScreen extends Screen
     public GameScreen(GameEngine gameEngine)
     {
         super(gameEngine);
-        background = gameEngine.loadBitmanp("background.png");
-        resume = gameEngine.loadBitmanp("resume.png");
-        gameOver = gameEngine.loadBitmanp("gameover.png");
-        font = gameEngine.loadFont("font.ttf");
-        bounceSound = gameEngine.loadSound("bounce.wav");
-        blockSound = gameEngine.loadSound("blocksplosion.wav");
+        background = gameEngine.loadBitmanp("Breakout/background.png");
+        resume = gameEngine.loadBitmanp("Breakout/resume.png");
+        gameOver = gameEngine.loadBitmanp("Breakout/gameover.png");
+        font = gameEngine.loadFont("Breakout/font.ttf");
+        bounceSound = gameEngine.loadSound("Breakout/bounce.wav");
+        blockSound = gameEngine.loadSound("Breakout/blocksplosion.wav");
 
         world = new World(new CollisionListener()
         {

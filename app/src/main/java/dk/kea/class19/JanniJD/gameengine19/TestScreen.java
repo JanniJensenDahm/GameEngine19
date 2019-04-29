@@ -2,7 +2,6 @@ package dk.kea.class19.JanniJD.gameengine19;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.util.Log;
 
 public class TestScreen extends Screen
 {
@@ -16,9 +15,9 @@ public class TestScreen extends Screen
     public TestScreen(GameEngine gameEngine)
     {
         super(gameEngine);
-        bitmap = gameEngine.loadBitmanp("bob.png");
-        sound = gameEngine.loadSound("blocksplosion.wav");
-        backgroundMusic = gameEngine.loadMusic("music.ogg");
+        bitmap = gameEngine.loadBitmanp("Breakout/bob.png");
+        sound = gameEngine.loadSound("Breakout/blocksplosion.wav");
+        backgroundMusic = gameEngine.loadMusic("Breakout/music.ogg");
         isPlaying = true;
     }
 
